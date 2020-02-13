@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.css';
 import { createIframeClient } from '@remixproject/plugin'
+import Axios from 'axios';
 
 function App() {
   
@@ -44,12 +45,13 @@ class ContractGetterForm extends React.Component {
       this.setState({info: ''});
       const network = await this.state.client.call('network', 'detectNetwork')
       const address = this.state.contractAddress.replace('0x', '')      
-      let contract = await fetch(`http://178.19.221.38:10000/repository/contract/byChainId/${network.id}/${address}`, {mode:'cors'})
-      if (!contract) return this.setState({info: `ŝource of ${this.state.contractAddress} not found on network ${network.id}`})
-      contract = JSON.parse(contract)
+      //let contract = await fetch(`http://178.19.221.38:10000/repository/contract/byChainId/${network.id}/${address}`, {mode:'cors'})
+      let response = await Axios(`https://verification.komputing.org/repository/contract/byChainId/1/0x033d040e1105332aE77A6C5a2371784c378dF9cE/metadata.json`)
+      if (!response) return this.setState({info: `source of ${this.state.contractAddress} not found on network ${network.id}`})
+      let contract = response.data
       for (let source in contract['sources']) {
-        for (let url of contract['sources'][source]) {
-          if (url.incudes('ipfs')) {
+        for (let url in contract['sources'][source].urls) {
+          if (url.includes('ipfs')) {
             const content = await this.state.client.call('contentImport', 'resolve', url)
             await this.state.client.call('fileManager', 'setFile', `browser/${source}`, content)
             return

@@ -1,15 +1,14 @@
 import React from 'react';
-import './App.css';
 import { createIframeClient } from '@remixproject/plugin'
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 
 function App() {
-  
+
   return (
     <div className="App">
       <ContractGetterForm></ContractGetterForm>
     </div>
-  ) 
+  )
 }
 
 class ContractGetterForm extends React.Component {
@@ -39,7 +38,7 @@ class ContractGetterForm extends React.Component {
           <CopyToClipboard text={this.state.abi} ><button className="btn btn-secondary mt-2" >Copy ABI to clipboard</button></CopyToClipboard>
         }
       </div>
-    ) 
+    )
   }
 
   handleChange (event) {

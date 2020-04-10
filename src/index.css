@@ -11,3 +11,8 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.file-upload {
+  border: 2px dashed #ced4da;
+  cursor: pointer;
+}

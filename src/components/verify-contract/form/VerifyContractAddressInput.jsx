@@ -1,7 +1,6 @@
 import React from "react";
 
-export const BlockchainAdressInput = ({setAddress}) => {
-
+export const VerifyContractAddressInput = ({setAddress}) => {
     return (
         <>
             <input className="form-control my-2" type="text" placeholder="Contract Address (required)"

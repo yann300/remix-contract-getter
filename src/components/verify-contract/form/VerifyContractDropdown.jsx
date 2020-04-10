@@ -1,8 +1,7 @@
 import React from "react";
 import Select from "react-select";
 
-export const BlockChainSelect = ({chainOptions, chain, setChain}) => {
-
+export const VerifyContractDropdown = ({chainOptions, chain, setChain}) => {
     return (
         <>
             <Select

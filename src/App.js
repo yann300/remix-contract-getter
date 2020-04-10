@@ -1,12 +1,23 @@
 import React from 'react';
 import { createIframeClient } from '@remixproject/plugin'
 import {CopyToClipboard} from 'react-copy-to-clipboard';
+import {VerifyContractForm} from "./components/VerifyContractForm";
 
 function App() {
 
   return (
     <div className="App">
       <ContractGetterForm></ContractGetterForm>
+      <div className="card m-4">
+          <div className="card-body">
+            <div className="card-header">
+              <h5 className="card-title">Verify contract</h5>
+            </div>
+            <p className="card-text my-2">Upload metadata and source files of your contract to make it available.
+              Note that the metadata file has to be exactly the same as at deploy time.</p>
+          <VerifyContractForm/>
+          </div>
+      </div>
     </div>
   )
 }

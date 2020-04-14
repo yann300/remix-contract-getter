@@ -18,13 +18,13 @@ export const VerifyContractForm = ({setLoading, setError, setResult}) => {
     const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
 
 
-    const resetState = () => {
-        setError(null);
-        setResult(null);
-    };
+    // const resetState = () => {
+    //     setError(null);
+    //     setResult(null);
+    // };
 
     const handleSubmit = (e) => {
-        resetState();
+        console.log('button submit clicked');
         e.preventDefault();
 
         const formData = new FormData();
@@ -48,7 +48,7 @@ export const VerifyContractForm = ({setLoading, setError, setResult}) => {
                 <VerifyContractDropdown chainOptions={chainOptions} chain={chain} setChain={setChain}/>
                 <VerifyContractAddressInput setAddress={setAddress}/>
                 <VerifyContractFileUpload acceptedFiles={acceptedFiles} getInputProps={getInputProps} getRootProps={getRootProps} />
-                <button type="submit" className="btn btn-primary my-2">Verify</button>
+                <button type="submit" className="btn btn-primary my-2" disabled={!address}>Verify</button>
             </form>
     )
 };

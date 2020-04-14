@@ -16,3 +16,8 @@ code {
   border: 2px dashed #ced4da;
   cursor: pointer;
 }
+
+button:disabled,
+button[disabled] {
+  cursor: not-allowed;
+}

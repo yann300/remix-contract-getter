@@ -4,7 +4,7 @@ import {VerifyContractAddressInput} from "./VerifyContractAddressInput";
 import {VerifyContractFileUpload} from "./VerifyContractFileUpload";
 import {useDropzone} from "react-dropzone";
 
-export const VerifyContractForm = ({setLoading, setError, setResult}) => {
+export const VerifyContractForm = ({setLoading, setError, setResult, setChainValue, serverUrl}) => {
     const chainOptions = [
         {value: 'mainnet', label: 'Ethereum Mainnet'},
         {value: 'ropsten', label: 'Ropsten'},
@@ -17,14 +17,14 @@ export const VerifyContractForm = ({setLoading, setError, setResult}) => {
     const [address, setAddress] = useState('');
     const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
 
-
-    // const resetState = () => {
-    //     setError(null);
-    //     setResult(null);
-    // };
+    const resetState = () => {
+        setError(null);
+        setResult([]);
+        setChainValue(null);
+    };
 
     const handleSubmit = (e) => {
-        console.log('button submit clicked');
+        resetState();
         e.preventDefault();
 
         const formData = new FormData();
@@ -37,10 +37,34 @@ export const VerifyContractForm = ({setLoading, setError, setResult}) => {
 
         // add selected files to the form data object
         if (acceptedFiles.length > 0) {
-            console.log(acceptedFiles);
             acceptedFiles.forEach(file => formData.append('files', file));
         }
-        console.log(formData.get('files'));
+
+        setLoading(true);
+        try{
+            fetch(`${serverUrl}`, {
+                method: 'POST',
+                body: formData
+            })
+                .then(res => res.json())
+                .then(response => {
+                    setLoading(false)
+                    if (response.error) {
+                        setError(response.error);
+                    } else {
+                        setChainValue(chain.value);
+                        setResult(response.result);
+                    }
+                }).catch(err => {
+                setLoading(false);
+                setError('Something went wrong!');
+            })
+        }
+        catch(err) {
+            console.log('Error: ', err);
+            setLoading(false);
+            setError('Something went wrong!');
+        }
     };
 
     return (

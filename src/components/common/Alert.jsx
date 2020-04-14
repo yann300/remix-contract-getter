@@ -1,7 +1,10 @@
 import React from "react";
 
-export const Alert = ({type, msg}) => {
+export const Alert = ({type, msg, children}) => {
     return (
-        <div className={`alert alert-${type}`} role="alert">{ msg }</div>
+        <div className={`alert alert-${type}`} role="alert">
+            { msg }
+            { children }
+        </div>
     )
 };

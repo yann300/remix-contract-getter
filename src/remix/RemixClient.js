@@ -63,9 +63,13 @@ export class RemixClient extends PluginClient {
         }
         return `browser/${path}`;
     }
+    
+    contentImport = (stdUrl) => {
+        await this.client.call('contentImport', 'resolve', stdUrl)
+    }
 
 
-    fetch = async (address, ) => {
+    fetch = async (address) => {
         return new Promise(async (resolve, reject) => {
             const network = await this.client.call('network', 'detectNetwork')
             let contract = await fetch(`https://verification.komputing.org/repository/contract/byChainId/${network.id}/${address}/metadata.json`)
@@ -83,7 +87,7 @@ export class RemixClient extends PluginClient {
                 for (let url of urls) {
                   if (url.includes('ipfs')) {
                     let stdUrl = `ipfs://${url.split('/')[2]}`
-                    const source = await this.state.client.call('contentImport', 'resolve', stdUrl)
+                    const source = this.contentImport(stdUrl)
                     file = file.replace('browser/', '') // should be fixed in the remix IDE end.
                     this.createFile(`${address}/${file}`, source.content)
                     if (!switched) this.switchFile(`${address}/${file}`, source.content)

@@ -7,20 +7,6 @@ export const ContractFetcher = ({client}) => {
     const [abi, setAbi] = useState('');
     const [info, setInfo] = useState('');
 
-    const fetchContract = async () => {
-        try {
-            const network = await client.call('network', 'detectNetwork');
-            let contract = await fetch(`https://contractrepo.komputing.org//repository/contract/byChainId/${network.id}/${contractAddress}/metadata.json`);
-            console.log(contract);
-            if (!contract) return setInfo(`ŝource of ${contractAddress} not found on network ${network.id}`);
-            if (!contract.ok) return setInfo(`${contract.statusText}. Network: ${network.name}`);
-
-        } catch (e) {
-            console.log(e);
-            setInfo(e.message);
-        }
-    }
-
     return (
         <div className="container">
             <div className="card m-4">

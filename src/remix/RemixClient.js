@@ -9,7 +9,8 @@ export class RemixClient extends PluginClient {
     }  
 
     client = createIframeClient();
-    baseUrl = "https://contractrepo.komputing.org/contract/byChainId"
+    baseUrl = "https://contractrepostaging.komputing.org/contract/byChainId"
+    serverUrl = "https://verificationstaging.komputing.org/server"
 
     createClient = () => {
         return this.client.onload();

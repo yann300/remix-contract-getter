@@ -3,6 +3,7 @@ import {VerifyContractDropdown} from "./VerifyContractDropdown";
 import {VerifyContractAddressInput} from "./VerifyContractAddressInput";
 import {VerifyContractFileUpload} from "./VerifyContractFileUpload";
 import {useDropzone} from "react-dropzone";
+import {verify} from "../../../remix/RemixClient"
 
 export const VerifyContractForm = ({setLoading, setError, setResult, setChainValue, serverUrl}) => {
     const chainOptions = [
@@ -39,32 +40,9 @@ export const VerifyContractForm = ({setLoading, setError, setResult, setChainVal
         if (acceptedFiles.length > 0) {
             acceptedFiles.forEach(file => formData.append('files', file));
         }
-
+        
         setLoading(true);
-        try{
-            fetch(`${serverUrl}`, {
-                method: 'POST',
-                body: formData
-            })
-                .then(res => res.json())
-                .then(response => {
-                    setLoading(false)
-                    if (response.error) {
-                        setError(response.error);
-                    } else {
-                        setChainValue(chain.value);
-                        setResult(response.result);
-                    }
-                }).catch(err => {
-                setLoading(false);
-                setError('Something went wrong!');
-            })
-        }
-        catch(err) {
-            console.log('Error: ', err);
-            setLoading(false);
-            setError('Something went wrong!');
-        }
+        await verify(formData)
     };
 
     return (

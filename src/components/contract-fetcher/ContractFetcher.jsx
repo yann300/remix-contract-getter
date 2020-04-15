@@ -7,6 +7,8 @@ export const ContractFetcher = ({client}) => {
     const [abi, setAbi] = useState('');
     const [info, setInfo] = useState('');
 
+    await fetch(contractAddress);
+
     return (
         <div className="container">
             <div className="card m-4">

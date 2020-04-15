@@ -1,16 +1,15 @@
 import { Api, createIframeClient, HighlightPosition, PluginClient, RemixApi } from '@remixproject/plugin';
+import axios from 'axios';
 
 export class RemixClient extends PluginClient {
 
-    /**
-     *
-     */
     constructor() {
         super();
-        this.methods = ["fetch", "validate"]
+        this.methods = ["fetch", "verify"]
     }  
 
     client = createIframeClient();
+    baseUrl = "https://contractrepo.komputing.org/contract/byChainId"
 
     createClient = () => {
         return this.client.onload();
@@ -30,6 +29,10 @@ export class RemixClient extends PluginClient {
 
     getFolder = async() => {
         return this.client.call('fileManager', 'getFolder', '/browser');
+    }
+
+    getFolderByAddress = async(address) => {
+        return this.client.call('fileManager', 'getFolder', `/browser/${address}`)
     }
 
     getCurrentFile = async () => {
@@ -72,18 +75,24 @@ export class RemixClient extends PluginClient {
     fetch = async (address) => {
         return new Promise(async (resolve, reject) => {
             const network = await this.client.call('network', 'detectNetwork')
-            let contract = await fetch(`https://verification.komputing.org/repository/contract/byChainId/${network.id}/${address}/metadata.json`)
-            if (!contract) reject({info: `ŝource of ${this.state.contractAddress} not found on network ${network.id}`})
-            if (!contract.ok) reject({info: `${contract.statusText}. Network: ${network.name}`})
-            contract = await contract.json()
-            console.log(contract)
+            let files = await axios.get(`${baseUrl}/${network.id}/${address}`)
+            let metadata;
+            let contract;
 
-            compilerVersion = contract.compiler.version;
-            abi = JSON.stringify(contract.output.abi, null, '\t');
-            this.createFile(`${address}/metadata.json`, JSON.stringify(contract, null, '\t'))
+            files.forEach(file => {
+                // check names of the files
+            });
+
+            if (!metadata) reject({info: `ŝource of ${address} not found on network ${network.id}`})
+            if (!metadata.ok) reject({info: `${metadata.statusText}. Network: ${network.name}`}) // TODO: check how axios operates on this
+            metadata = await metadata.json()
+
+            compilerVersion = metadata.compiler.version;
+            abi = JSON.stringify(metadata.output.abi, null, '\t');
+            this.createFile(`${address}/metadata.json`, JSON.stringify(metadata, null, '\t'))
             let switched = false
-            for (let file in contract['sources']) {
-                const urls = contract['sources'][file].urls
+            for (let file in metadata['sources']) {
+                const urls = metadata['sources'][file].urls
                 for (let url of urls) {
                   if (url.includes('ipfs')) {
                     let stdUrl = `ipfs://${url.split('/')[2]}`
@@ -96,12 +105,18 @@ export class RemixClient extends PluginClient {
                   }
                 }
               }
-            resolve(); //TODO:
+            resolve(address);
         });
   }
 
-  validate = async () => {
-      
+  verify = async (formData) => {
+    return new Promise(async (resolve, reject) => {
+            let response = await axios(`${serverUrl}`, {
+                method: 'POST',
+                body: formData
+            })
+            resolve(response);
+        })
   }
 
 }

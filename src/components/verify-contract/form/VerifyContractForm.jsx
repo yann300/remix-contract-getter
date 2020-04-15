@@ -3,7 +3,7 @@ import {VerifyContractDropdown} from "./VerifyContractDropdown";
 import {VerifyContractAddressInput} from "./VerifyContractAddressInput";
 import {VerifyContractFileUpload} from "./VerifyContractFileUpload";
 import {useDropzone} from "react-dropzone";
-import {verify} from "../../../remix/RemixClient"
+import { remixClient } from "../../../remix/RemixClient"
 
 export const VerifyContractForm = ({setLoading, setError, setResult, setChainValue, serverUrl}) => {
     const chainOptions = [
@@ -24,12 +24,13 @@ export const VerifyContractForm = ({setLoading, setError, setResult, setChainVal
         setChainValue(null);
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         resetState();
         e.preventDefault();
 
         const formData = new FormData();
 
+        console.log(address);
         // add address
         formData.append('address', address);
 
@@ -40,9 +41,22 @@ export const VerifyContractForm = ({setLoading, setError, setResult, setChainVal
         if (acceptedFiles.length > 0) {
             acceptedFiles.forEach(file => formData.append('files', file));
         }
-        
+
         setLoading(true);
-        await verify(formData)
+
+        try {
+            const response = await remixClient.verify(formData);
+            // console.log('test')
+            console.log(response.result)
+
+            if (!!response.result) {
+                setLoading(false);
+            }
+            // console.log(response);
+        } catch (e) {
+            console.log(e);
+            console.log('error')
+        }
     };
 
     return (

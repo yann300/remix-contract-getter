@@ -7,7 +7,7 @@ export const ContractFetcher = ({client}) => {
     const [abi, setAbi] = useState('');
     const [info, setInfo] = useState('');
 
-    await fetch(contractAddress);
+    // await fetch(contractAddress);
 
     return (
         <div className="container">
@@ -18,10 +18,10 @@ export const ContractFetcher = ({client}) => {
                     </div>
                     <p className="card-text mt-4 text-center">Input a valid contract address and load the source code in
                         Remix (Please make sure the right network is selected).</p>
-                    <form className="d-flex flex-column" onSubmit={fetchContract}>
+                    <form className="d-flex flex-column">
                         <button type="submit" className="btn btn-primary my-2">Fetch</button>
                     </form>
-                    <button className="btn btn-primary my-2" onClick={fetchContract}>Fetch</button>
+                    <button className="btn btn-primary my-2">Fetch</button>
 
                 </div>
             </div>

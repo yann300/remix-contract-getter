@@ -2,7 +2,7 @@ import React from 'react';
 import {createIframeClient} from '@remixproject/plugin'
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 import {VerifyContract} from "./components/verify-contract/VerifyContract";
-import {ContractFetcher} from "./components/contract-getter/ContractFetcher";
+import {ContractFetcher} from "./components/contract-fetcher/ContractFetcher";
 
 function App() {
   const client = createIframeClient();
@@ -11,8 +11,8 @@ function App() {
   return (
     <div className="App">
       <VerifyContract/>
-      <ContractFetcher client={client}/>
-      <ContractGetterForm/>
+      {/*<ContractFetcher client={client}/>*/}
+      {/*<ContractGetterForm/>*/}
     </div>
   )
 }

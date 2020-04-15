@@ -10,11 +10,11 @@ export const ContractFetcher = ({client}) => {
     const fetchContract = async () => {
         try {
             const network = await client.call('network', 'detectNetwork');
-            let contract = await fetch(`https://verification.komputing.org/repository/contract/byChainId/${network.id}/${contractAddress}/metadata.json`);
-            if (!contract) return setInfo(`ŝource of ${this.state.contractAddress} not found on network ${network.id}`);
+            let contract = await fetch(`https://contractrepo.komputing.org//repository/contract/byChainId/${network.id}/${contractAddress}/metadata.json`);
+            console.log(contract);
+            if (!contract) return setInfo(`ŝource of ${contractAddress} not found on network ${network.id}`);
             if (!contract.ok) return setInfo(`${contract.statusText}. Network: ${network.name}`);
 
-            console.log(network);
         } catch (e) {
             console.log(e);
             setInfo(e.message);
@@ -33,6 +33,8 @@ export const ContractFetcher = ({client}) => {
                     <form className="d-flex flex-column" onSubmit={fetchContract}>
                         <button type="submit" className="btn btn-primary my-2">Fetch</button>
                     </form>
+                    <button className="btn btn-primary my-2" onClick={fetchContract}>Fetch</button>
+
                 </div>
             </div>
         </div>

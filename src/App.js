@@ -12,7 +12,7 @@ function App() {
     <div className="App">
       <VerifyContract/>
       <ContractFetcher client={client}/>
-      {/*<ContractGetterForm/>*/}
+      <ContractGetterForm/>
     </div>
   )
 }

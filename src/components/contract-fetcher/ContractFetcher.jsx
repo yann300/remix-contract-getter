@@ -22,7 +22,6 @@ export const ContractFetcher = ({client}) => {
                         <button type="submit" className="btn btn-primary my-2">Fetch</button>
                     </form>
                     <button className="btn btn-primary my-2">Fetch</button>
-
                 </div>
             </div>
         </div>

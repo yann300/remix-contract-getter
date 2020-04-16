@@ -3,9 +3,9 @@ import {VerifyContractDropdown} from "./VerifyContractDropdown";
 import {VerifyContractAddressInput} from "./VerifyContractAddressInput";
 import {VerifyContractFileUpload} from "./VerifyContractFileUpload";
 import {useDropzone} from "react-dropzone";
-import { remixClient } from "../../../remix/RemixClient"
+import {remixClient} from "../../../remix/RemixClient"
 
-export const VerifyContractForm = ({setLoading, setError, setResult, setChainValue, serverUrl}) => {
+export const VerifyContractForm = ({setLoading, setError, setResult, setChainValue}) => {
     const chainOptions = [
         {value: 'mainnet', label: 'Ethereum Mainnet'},
         {value: 'ropsten', label: 'Ropsten'},
@@ -16,7 +16,7 @@ export const VerifyContractForm = ({setLoading, setError, setResult, setChainVal
 
     const [chain, setChain] = useState(chainOptions[0]);
     const [address, setAddress] = useState('');
-    const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
+    const {acceptedFiles, getRootProps, getInputProps} = useDropzone();
 
     const resetState = () => {
         setError(null);
@@ -46,25 +46,29 @@ export const VerifyContractForm = ({setLoading, setError, setResult, setChainVal
 
         try {
             const response = await remixClient.verify(formData);
-            // console.log('test')
-            console.log(response.result)
 
-            if (!!response.result) {
+            if (!!response.data.result.length) {
                 setLoading(false);
+                setChainValue(chain.value);
+                setResult(response.data.result);
+            } else {
+                setLoading(false);
+                setError(`Something went wrong!`);
             }
-            // console.log(response);
+
         } catch (e) {
-            console.log(e);
-            console.log('error')
+            setLoading(false);
+            setError(e.response.data.error || `Something went wrong!`);
         }
     };
 
     return (
-            <form className="d-flex flex-column" onSubmit={handleSubmit}>
-                <VerifyContractDropdown chainOptions={chainOptions} chain={chain} setChain={setChain}/>
-                <VerifyContractAddressInput setAddress={setAddress}/>
-                <VerifyContractFileUpload acceptedFiles={acceptedFiles} getInputProps={getInputProps} getRootProps={getRootProps} />
-                <button type="submit" className="btn btn-primary my-2" disabled={!address}>Verify</button>
-            </form>
+        <form className="d-flex flex-column" onSubmit={handleSubmit}>
+            <VerifyContractDropdown chainOptions={chainOptions} chain={chain} setChain={setChain}/>
+            <VerifyContractAddressInput setAddress={setAddress}/>
+            <VerifyContractFileUpload acceptedFiles={acceptedFiles} getInputProps={getInputProps}
+                                      getRootProps={getRootProps}/>
+            <button type="submit" className="btn btn-primary my-2" disabled={!address}>Verify</button>
+        </form>
     )
 };

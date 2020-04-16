@@ -1,4 +1,4 @@
-import { createIframeClient, PluginClient } from '@remixproject/plugin';
+import {createIframeClient, PluginClient} from '@remixproject/plugin';
 import axios from 'axios';
 
 export class RemixClient extends PluginClient {
@@ -28,11 +28,11 @@ export class RemixClient extends PluginClient {
         });
     }
 
-    getFolder = async() => {
+    getFolder = async () => {
         return this.client.call('fileManager', 'getFolder', '/browser');
     }
 
-    getFolderByAddress = async(address) => {
+    getFolderByAddress = async (address) => {
         return this.client.call('fileManager', 'getFolder', `/browser/${address}`)
     }
 
@@ -73,52 +73,53 @@ export class RemixClient extends PluginClient {
     }
 
 
-  //   fetch = async (address) => {
-  //       return new Promise(async (resolve, reject) => {
-  //           const network = await this.client.call('network', 'detectNetwork')
-  //           let files = await axios.get(`${baseUrl}/${network.id}/${address}`)
-  //           let metadata;
-  //           let contract;
-  //
-  //           files.forEach(file => {
-  //               // check names of the files
-  //           });
-  //
-  //           if (!metadata) reject({info: `ŝource of ${address} not found on network ${network.id}`})
-  //           if (!metadata.ok) reject({info: `${metadata.statusText}. Network: ${network.name}`}) // TODO: check how axios operates on this
-  //           metadata = await metadata.json()
-  //
-  //           compilerVersion = metadata.compiler.version;
-  //           abi = JSON.stringify(metadata.output.abi, null, '\t');
-  //           this.createFile(`${address}/metadata.json`, JSON.stringify(metadata, null, '\t'))
-  //           let switched = false
-  //           for (let file in metadata['sources']) {
-  //               const urls = metadata['sources'][file].urls
-  //               for (let url of urls) {
-  //                 if (url.includes('ipfs')) {
-  //                   let stdUrl = `ipfs://${url.split('/')[2]}`
-  //                   const source = this.contentImport(stdUrl)
-  //                   file = file.replace('browser/', '') // should be fixed in the remix IDE end.
-  //                   this.createFile(`${address}/${file}`, source.content)
-  //                   if (!switched) this.switchFile(`${address}/${file}`, source.content)
-  //                   switched = true
-  //                   break
-  //                 }
-  //               }
-  //             }
-  //           resolve(address);
-  //       });
-  // }
+    //   fetch = async (address) => {
+    //       return new Promise(async (resolve, reject) => {
+    //           const network = await this.client.call('network', 'detectNetwork')
+    //           let files = await axios.get(`${baseUrl}/${network.id}/${address}`)
+    //           let metadata;
+    //           let contract;
+    //
+    //           files.forEach(file => {
+    //               // check names of the files
+    //           });
+    //
+    //           if (!metadata) reject({info: `ŝource of ${address} not found on network ${network.id}`})
+    //           if (!metadata.ok) reject({info: `${metadata.statusText}. Network: ${network.name}`}) // TODO: check how axios operates on this
+    //           metadata = await metadata.json()
+    //
+    //           compilerVersion = metadata.compiler.version;
+    //           abi = JSON.stringify(metadata.output.abi, null, '\t');
+    //           this.createFile(`${address}/metadata.json`, JSON.stringify(metadata, null, '\t'))
+    //           let switched = false
+    //           for (let file in metadata['sources']) {
+    //               const urls = metadata['sources'][file].urls
+    //               for (let url of urls) {
+    //                 if (url.includes('ipfs')) {
+    //                   let stdUrl = `ipfs://${url.split('/')[2]}`
+    //                   const source = this.contentImport(stdUrl)
+    //                   file = file.replace('browser/', '') // should be fixed in the remix IDE end.
+    //                   this.createFile(`${address}/${file}`, source.content)
+    //                   if (!switched) this.switchFile(`${address}/${file}`, source.content)
+    //                   switched = true
+    //                   break
+    //                 }
+    //               }
+    //             }
+    //           resolve(address);
+    //       });
+    // }
 
-  verify = async (formData) => {
-    return new Promise(async (resolve, reject) => {
-            let response = await axios.post(`${this.serverUrl}`, formData)
-            resolve(response);
-    })
-  }
+    // verify = async (formData) => {
+    //   return new Promise(async (resolve, reject) => {
+    //           let response = await axios.post(`${this.serverUrl}`, formData)
+    //           resolve(response);
+    //   })
+    // }
 
-  verify = async (formData) => {
-        return axios.post(`${this.serverUrl}`, formData)
+
+    verify = async (formData) => {
+        return axios.post(`${this.serverUrl}`, formData);
     }
 }
 

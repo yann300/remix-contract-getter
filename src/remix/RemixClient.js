@@ -1,16 +1,14 @@
 import {createIframeClient, PluginClient} from '@remixproject/plugin';
 import axios from 'axios';
+import { SERVER_URL } from '../common/Constants';
 
 export class RemixClient extends PluginClient {
 
     constructor() {
         super();
+        this.client = createIframeClient();
         this.methods = ["fetch", "verify"];
     }
-
-    client = createIframeClient();
-    baseUrl = "https://contractrepostaging.komputing.org/contract/byChainId"
-    serverUrl = "https://verificationstaging.komputing.org/server"
 
     createClient = () => {
         return this.client.onload();
@@ -28,12 +26,8 @@ export class RemixClient extends PluginClient {
         });
     }
 
-    getFolder = async () => {
-        return this.client.call('fileManager', 'getFolder', '/browser');
-    }
-
     getFolderByAddress = async (address) => {
-        return this.client.call('fileManager', 'getFolder', `/browser/${address}`)
+        return this.client.call('fileManager', 'getFolder', this.getBrowserPath(address))
     }
 
     getCurrentFile = async () => {
@@ -43,22 +37,9 @@ export class RemixClient extends PluginClient {
     createFile = async (name, content) => {
         try {
             await this.client.call('fileManager', 'setFile', name, content)
-            //await this.client.call('fileManager', 'switchFile', name)
         } catch (err) {
             console.log(err)
         }
-    }
-
-    highlight = async (position, file, color) => {
-        await this.client.call('editor', 'highlight', position, this.getBrowserPath(file), color);
-    }
-
-    discardHighlight = async () => {
-        await this.client.call('editor', 'discardHighlight');
-    }
-
-    switchFile = async (file) => {
-        await this.client.call('fileManager', 'switchFile', this.getBrowserPath(file));
     }
 
     getBrowserPath = (path) => {
@@ -72,54 +53,23 @@ export class RemixClient extends PluginClient {
         await this.client.call('contentImport', 'resolve', stdUrl)
     }
 
+    listenOnCompilationFinishedEvent = async (callback) => {
+        await this.client.onload();
+        this.client.on('solidity', 'compilationFinished', (target, source, _version, data) => {
+            callback({ 
+                target, 
+                source: source.sources[target].content, 
+                contract: data.contracts[target] 
+            });
+        });
+    }
 
-    //   fetch = async (address) => {
-    //       return new Promise(async (resolve, reject) => {
-    //           const network = await this.client.call('network', 'detectNetwork')
-    //           let files = await axios.get(`${baseUrl}/${network.id}/${address}`)
-    //           let metadata;
-    //           let contract;
-    //
-    //           files.forEach(file => {
-    //               // check names of the files
-    //           });
-    //
-    //           if (!metadata) reject({info: `ŝource of ${address} not found on network ${network.id}`})
-    //           if (!metadata.ok) reject({info: `${metadata.statusText}. Network: ${network.name}`}) // TODO: check how axios operates on this
-    //           metadata = await metadata.json()
-    //
-    //           compilerVersion = metadata.compiler.version;
-    //           abi = JSON.stringify(metadata.output.abi, null, '\t');
-    //           this.createFile(`${address}/metadata.json`, JSON.stringify(metadata, null, '\t'))
-    //           let switched = false
-    //           for (let file in metadata['sources']) {
-    //               const urls = metadata['sources'][file].urls
-    //               for (let url of urls) {
-    //                 if (url.includes('ipfs')) {
-    //                   let stdUrl = `ipfs://${url.split('/')[2]}`
-    //                   const source = this.contentImport(stdUrl)
-    //                   file = file.replace('browser/', '') // should be fixed in the remix IDE end.
-    //                   this.createFile(`${address}/${file}`, source.content)
-    //                   if (!switched) this.switchFile(`${address}/${file}`, source.content)
-    //                   switched = true
-    //                   break
-    //                 }
-    //               }
-    //             }
-    //           resolve(address);
-    //       });
-    // }
-
-    // verify = async (formData) => {
-    //   return new Promise(async (resolve, reject) => {
-    //           let response = await axios.post(`${this.serverUrl}`, formData)
-    //           resolve(response);
-    //   })
-    // }
-
+    fetch = async () => {
+        console.log("Not implemented");
+    }
 
     verify = async (formData) => {
-        return axios.post(`${this.serverUrl}`, formData);
+        return axios.post(`${SERVER_URL}`, formData);
     }
 }
 

@@ -2,16 +2,9 @@ import React, { useState } from "react";
 import { Dropdown } from "./Dropdown";
 import { AddressInput } from "./AddressInput";
 import { remixClient } from "../../../remix/RemixClient";
+import { chainOptions } from "../../../common/Constants"
 
 export const ContractForm = ({ setLoading, setError, setResult, setChainValue }) => {
-
-    const chainOptions = [
-        { value: 'mainnet', label: 'Ethereum Mainnet' },
-        { value: 'ropsten', label: 'Ropsten' },
-        { value: 'rinkeby', label: 'Rinkeby' },
-        { value: 'kovan', label: 'Kovan' },
-        { value: 'goerli', label: 'Görli' }
-    ];
 
     const [chain, setChain] = useState(chainOptions[0]);
     const [address, setAddress] = useState('');

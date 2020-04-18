@@ -30,7 +30,9 @@ export const ContractFetcher = () => {
         setLoading(true);
 
         try {
-            const response = await remixClient.fetch(address, chain.value)
+            const response = await remixClient.fetch(address, chain)
+            console.log("Response:" + response)
+            await remixClient.saveFetchedToRemix(response.metadata, response.contract, address)
 
             if (!!response.metadata) {
                 setLoading(false);
@@ -43,7 +45,7 @@ export const ContractFetcher = () => {
 
         } catch (e) {
             setLoading(false);
-            setError(e.response.data.error || `Something went wrong!`);
+            setError(e || `Something went wrong!`);
         }
     };
     

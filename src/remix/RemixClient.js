@@ -54,7 +54,7 @@ export class RemixClient extends PluginClient {
     }
 
     contentImport = async (stdUrl) => {
-        await this.client.call('contentImport', 'resolve', stdUrl)
+        return await this.client.call('contentImport', 'resolve', stdUrl)
     }
 
     listenOnCompilationFinishedEvent = async (callback) => {
@@ -73,53 +73,64 @@ export class RemixClient extends PluginClient {
         return await this.client.call('network', 'detectNetwork')
     }
 
-    fetch = async (address) => {
+    fetchAndSave = async (address, chain) => {
+        const result = await this.fetch(address, chain) 
+        await this.saveFetchedToRemix(result.metadata, result.contract, address)       
+    }
+
+    fetch = async (address, chain) => {
         return new Promise(async (resolve, reject) => {
-            const network = await this.detectNetwork()
-            let response = await axios.get(`${REPOSITORY_URL}/${network.id}/${address}`)
+            try {
+                const network = await this.detectNetwork()
+                console.log(network)
+                if(!network) network = chain; // If Remix does not provide network use one from plugin
+
+                let response = await axios.get(`${REPOSITORY_URL}/${network.id}/${address}`)
+                console.log(response)
               
-            if (!response) reject({info: `ŝource of ${address} not found on network ${network.id}`})
-            if (!(response.status === 200)) reject({info: `${response.status}. Network: ${network.name}`}) 
+                if (!response) reject({info: `ŝource of ${address} not found on network ${network.id}`})
+                if (!(response.status === 200)) reject({info: `${response.status}. Network: ${network.name}`}) 
 
-            console.log(response)
+                let metadata;
+                let contract;
+                for(let i in response.data){
+                    const file = response.data[i];
+                    if(file.name.endsWith('json')){
+                        metadata = JSON.parse(file.content);
+                    } else if (file.name.endsWith('sol')){
+                        contract = file.content;
+                    }
+                };
 
-            let metadata;
-            let contract;
-            for(let i in response.data){
-                const file = response.data[i];
-                if(file.name.endsWith('json')){
-                    metadata = JSON.parse(file.content);
-                } else if (file.name.endsWith('sol')){
-                    contract = file.content;
-                }
-            };
+                resolve({ "metadata": metadata, "contract": contract });
+                } catch(err) {
+                    reject(err);
+                }   
+        });
+    }
 
-            console.log(metadata)
-            console.log(contract)
-
+    saveFetchedToRemix = async (metadata, contract, address) => {
             let compilerVersion = metadata.compiler.version;
             let abi = JSON.stringify(metadata.output.abi, null, '\t');
-            this.createFile(`${address}/metadata.json`, JSON.stringify(metadata, null, '\t'))
+            console.log(address)
+            this.createFile(`/verifiedSources/${address}/metadata.json`, JSON.stringify(metadata, null, '\t'))
             let switched = false
             for (let file in metadata['sources']) {
                 console.log(file)
                 const urls = metadata['sources'][file].urls
                 for (let url of urls) {
-                    console.log("Url" + url)
                     if (url.includes('ipfs')) {
                         let stdUrl = `ipfs://${url.split('/')[2]}`
                         const source = await this.contentImport(stdUrl)
-                        file = file.replace('browser/', '') // should be fixed in the remix IDE end.
-                        console.log("Source :" + source)
-                        //this.createFile(`${address}/${file}`, source.content) // TODO: Content seems empty
+                        file = file.replace('browser/', '')
+                        this.createFile(`/verifiedSources/${address}/${file}`, source.content)
                         if (!switched) await this.switchFile(`${address}/${file}`)
                         switched = true
                         break
                     }
                 }
             }
-            resolve({ "metadata": metadata, "contract": contract });
-          });
+        
     }
 
 

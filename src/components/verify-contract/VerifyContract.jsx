@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ContractForm } from "./form/ContractForm";
+import { ContractForm } from "../common/form/ContractForm";
 import { Alert, Spinner } from "../common";
 import { REPOSITORY_URL } from '../../common/Constants';
 

@@ -56,7 +56,7 @@ export const ContractFetcher = () => {
                         <h5 className="card-title my-2 text-center">Contract Fetcher</h5>
                     </div>
                     <p className="card-text mt-4 text-center">Input a valid contract address and load the source code in
-                        Remix (Please make sure the right network is selected).</p>
+                        Remix (Please make sure the correct network is selected)).</p>
                     
                         <form className="d-flex flex-column" onSubmit={handleSubmit}>
                         <Dropdown chainOptions={chainOptions} chain={chain} setChain={setChain} />

@@ -85,7 +85,7 @@ export class RemixClient extends PluginClient {
                 console.log(network)
                 if(!network) network = chain; // If Remix does not provide network use one from plugin
 
-                let response = await axios.get(`${REPOSITORY_URL}/${network.id}/${address}`)
+                let response = await axios.get(`${SERVER_URL}/files/${network.id}/${address}`)
                 console.log(response)
               
                 if (!response) reject({info: `ŝource of ${address} not found on network ${network.id}`})

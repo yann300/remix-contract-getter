@@ -31,7 +31,6 @@ export const ContractFetcher = () => {
 
         try {
             const response = await remixClient.fetch(address, chain)
-            console.log("Response:" + response)
             await remixClient.saveFetchedToRemix(response.metadata, response.contract, address)
 
             if (!!response.metadata) {

@@ -45,10 +45,10 @@ export const VerifyContract = () => {
                             }
                         </Alert>
                     )}
-                <p className="my-2">Source code: <a
-                    href="https://github.com/ethereum/source-verify/">Github</a>
+                <p className="my-1">Source code: <a
+                    href="https://github.com/ethereum/source-verify/">GitHub</a>
                 </p>
-                <p className="mb-2">Feel free to open issues or contribute.</p>
+                <p className="m-0">Feel free to open issues or contribute.</p>
             </div>
         </div>
     )

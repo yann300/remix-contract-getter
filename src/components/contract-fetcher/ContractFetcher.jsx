@@ -49,21 +49,18 @@ export const ContractFetcher = () => {
     };
     
     return (
-        <div className="container">
-            <div className="card m-4">
-                <div className="card-body">
-                    <div className="card-header">
-                        <h5 className="card-title my-2 text-center">Contract Fetcher</h5>
-                    </div>
-                    <p className="card-text mt-4 text-center">Input a valid contract address and load the source code in
-                        Remix (Please make sure the correct network is selected)).</p>
-                    
-                        <form className="d-flex flex-column" onSubmit={handleSubmit}>
-                        <Dropdown chainOptions={chainOptions} chain={chain} setChain={setChain} />
-                        <AddressInput setAddress={setAddress} />
-                        <button type="submit" className="btn btn-primary my-2" disabled={!address}>Fetch</button>
-                    </form>
+        <div className="card m-2">
+            <div className="card-body text-center p-3">
+                <div className="card-header">
+                    <h6 className="card-title m-0">Contract Fetcher</h6>
                 </div>
+                <p className="card-text my-2 mb-3">Input a valid contract address and load the source code in
+                    Remix (Please make sure the correct network is selected)).</p>    
+                    <form className="d-flex flex-column" onSubmit={handleSubmit}>
+                    <Dropdown chainOptions={chainOptions} chain={chain} setChain={setChain} />
+                    <AddressInput setAddress={setAddress} />
+                    <button type="submit" className="btn btn-primary my-2 mb-0" disabled={!address}>Fetch</button>
+                </form>
             </div>
         </div>
     )

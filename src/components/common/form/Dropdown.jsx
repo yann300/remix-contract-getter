@@ -5,7 +5,7 @@ export const Dropdown = ({chainOptions, chain, setChain}) => {
     return (
         <Select
             options={chainOptions}
-            className="dropdown"
+            classNamePrefix="dropdown"
             value={chain}
             onChange={option => setChain(option)}
         />

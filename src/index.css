@@ -21,3 +21,31 @@ button:disabled,
 button[disabled] {
   cursor: not-allowed;
 }
+
+.dropdown__control {
+  background: inherit !important;
+  color: inherit !important;
+  border-color: inherit !important;
+}
+
+.dropdown__indicator {
+  color: inherit !important;
+}
+
+.dropdown__indicator-separator {
+  background: inherit !important;
+}
+
+.dropdown__single-value {
+  color: inherit !important;
+}
+/* 
+.dropdown__menu {
+  color: inherit !important;
+  background-color: var(--dark) !important;
+} */
+
+.dropdown__menu-list {
+  color: inherit !important;
+  background: inherit !important;
+}

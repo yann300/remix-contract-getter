@@ -30,7 +30,7 @@ export const ContractFetcher = () => {
         setLoading(true);
 
         try {
-            const response = await remixClient.fetch(address, chain)
+            const response = await remixClient.fetch(address, chain.id)
             await remixClient.saveFetchedToRemix(response.metadata, response.contract, address)
 
             if (!!response.metadata) {

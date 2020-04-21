@@ -1,4 +1,4 @@
-import {createIframeClient, PluginClient} from '@remixproject/plugin';
+import {connectIframe, PluginClient} from '@remixproject/plugin';
 import axios from 'axios';
 import { SERVER_URL, REPOSITORY_URL } from '../common/Constants';
 
@@ -6,8 +6,9 @@ export class RemixClient extends PluginClient {
 
     constructor() {
         super();
-        this.client = createIframeClient();
         this.methods = ["fetch", "verify"];
+        connectIframe(this);
+        this.client = this;
     }
 
     createClient = () => {
@@ -78,12 +79,22 @@ export class RemixClient extends PluginClient {
         await this.saveFetchedToRemix(result.metadata, result.contract, address)       
     }
 
+    test = async () => {
+        try {
+            const data = await this.client.call('source-verification', 'fetch', '0x000F35ec1acd193C2A11651c8A6e7D2fc99ACB7d', 3)
+            console.log(data)    
+        } catch (e) {
+            console.log(e.message)
+        }
+    
+    }
+
     fetch = async (address, chain) => {
         return new Promise(async (resolve, reject) => {
             try {
                 let network = await this.detectNetwork()
                 if(network.id === "-") {
-                    network = chain;
+                    network.id = chain;
                 }
 
                 let response = await axios.get(`${SERVER_URL}/files/${network.id}/${address}`)

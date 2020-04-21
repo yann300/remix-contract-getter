@@ -44,7 +44,8 @@ export const VerifyContract = () => {
                                 <p>Found {result.length} addresses of this contract: {result.join(', ')}</p>
                             }
                         </Alert>
-                    )}
+                    )
+                }
                 <p className="my-1">Source code: <a
                     href="https://github.com/ethereum/source-verify/">GitHub</a>
                 </p>

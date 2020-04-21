@@ -66,10 +66,13 @@ export const ContractForm = ({ setLoading, setError, setResult, setChainValue })
         <form className="d-flex flex-column" onSubmit={handleSubmit}>
             <Dropdown chainOptions={chainOptions} chain={chain} setChain={setChain} />
             <AddressInput setAddress={setAddress} />
-            {files.length > 0 && 
-            <ul>
+            {files.length > 0 &&
+            <>
+            <h6>Files</h6>
+            <ul className="text-center list-unstyled border my-2 p-1">
                 {files.map(file => <li key={file.name}>{file.name}</li>)}
             </ul>
+            </>
             }
             <button type="submit" className="btn btn-primary my-2" disabled={!address}>Verify</button>
         </form>

@@ -81,12 +81,12 @@ export class RemixClient extends PluginClient {
     fetch = async (address, chain) => {
         return new Promise(async (resolve, reject) => {
             try {
-                const network = await this.detectNetwork()
-                console.log(network)
-                if(!network) network = chain; // If Remix does not provide network use one from plugin
+                let network = await this.detectNetwork()
+                if(network.id === "-") {
+                    network = chain;
+                }
 
                 let response = await axios.get(`${SERVER_URL}/files/${network.id}/${address}`)
-                console.log(response)
               
                 if (!response) reject({info: `ŝource of ${address} not found on network ${network.id}`})
                 if (!(response.status === 200)) reject({info: `${response.status}. Network: ${network.name}`}) 
@@ -102,6 +102,7 @@ export class RemixClient extends PluginClient {
                     }
                 };
 
+                console.log({ "metadata": metadata, "contract": contract });
                 resolve({ "metadata": metadata, "contract": contract });
                 } catch(err) {
                     reject(err);

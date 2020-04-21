@@ -30,7 +30,7 @@ export const ContractFetcher = () => {
         setLoading(true);
 
         try {
-            const response = await remixClient.fetch(address, chain)
+            const response = await remixClient.fetch(address, chain.id)
             await remixClient.saveFetchedToRemix(response.metadata, response.contract, address)
 
             if (!!response.metadata) {
@@ -62,6 +62,7 @@ export const ContractFetcher = () => {
                         <Dropdown chainOptions={chainOptions} chain={chain} setChain={setChain} />
                         <AddressInput setAddress={setAddress} />
                         <button type="submit" className="btn btn-primary my-2" disabled={!address}>Fetch</button>
+                        <button type="submit">Fetch</button>
                     </form>
                 </div>
             </div>

@@ -1,8 +1,9 @@
 import React, {useState} from "react";
 import { Dropdown } from "../common/form/Dropdown"
 import { AddressInput } from "../common/form/AddressInput"
-import { chainOptions } from "../../common/Constants"
+import {chainOptions, REPOSITORY_URL} from "../../common/Constants"
 import { remixClient } from "../../remix/RemixClient"
+import {Alert, Spinner} from "../common";
  
 export const ContractFetcher = () => {
     const [chain, setChain] = useState(chainOptions[0]);
@@ -44,27 +45,42 @@ export const ContractFetcher = () => {
 
         } catch (e) {
             setLoading(false);
-            setError(e || `Something went wrong!`);
+            setError(`Something went wrong!`);
         }
     };
     
     return (
-        <div className="container">
-            <div className="card m-4">
-                <div className="card-body">
-                    <div className="card-header">
-                        <h5 className="card-title my-2 text-center">Contract Fetcher</h5>
-                    </div>
-                    <p className="card-text mt-4 text-center">Input a valid contract address and load the source code in
-                        Remix (Please make sure the correct network is selected)).</p>
-                    
-                        <form className="d-flex flex-column" onSubmit={handleSubmit}>
+        <div className="card m-2">
+            <div className="card-body text-center p-3">
+                <div className="card-header">
+                    <h6 className="card-title m-0">Contract Fetcher</h6>
+                </div>
+                <p className="card-text my-2 mb-3">Input a valid contract address and load the source code in Remix (Please make sure the correct network is selected)).</p>
+                    <form className="d-flex flex-column" onSubmit={handleSubmit}>
                         <Dropdown chainOptions={chainOptions} chain={chain} setChain={setChain} />
                         <AddressInput setAddress={setAddress} />
-                        <button type="submit" className="btn btn-primary my-2" disabled={!address}>Fetch</button>
-                        <button type="submit">Fetch</button>
+                        <button type="submit" className="btn btn-primary my-2 mb-0" disabled={!address}>Fetch</button>
                     </form>
-                </div>
+                {
+                    loading && <Spinner />
+                }
+                {
+                    error && <Alert type={'danger'} heading={error} />
+                }
+                {
+                    !!result.length && (
+                        <Alert type={'success'} heading='Contract successfully verified!'>
+                            <p className="m-0 mt-2">
+                                View the assets in the <a href={`${REPOSITORY_URL}contract/${chainValue}/${result[0].address}`}> file explorer.
+                            </a>
+                            </p>
+                            {
+                                result.length > 1 &&
+                                <p>Found {result.length} addresses of this contract: {result.join(', ')}</p>
+                            }
+                        </Alert>
+                    )
+                }
             </div>
         </div>
     )

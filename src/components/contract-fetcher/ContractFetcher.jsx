@@ -32,10 +32,7 @@ export const ContractFetcher = () => {
 
         try {
             const response = await remixClient.fetch(address, chain)
-            console.log("Response:" + JSON.stringify(response));
-
-            // TODO: error is returned from saveFetchToRemix
-            // await remixClient.saveFetchedToRemix(response.metadata, response.contract, address)
+            await remixClient.saveFetchedToRemix(response.metadata, response.contract, address)
 
             if (!!response) {
                 setLoading(false);

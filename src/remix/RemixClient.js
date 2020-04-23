@@ -1,4 +1,4 @@
-import {connectIframe, PluginClient} from '@remixproject/plugin';
+import {connectIframe, listenOnThemeChanged, PluginClient} from '@remixproject/plugin';
 import axios from 'axios';
 import { SERVER_URL, REPOSITORY_URL } from '../common/Constants';
 
@@ -8,6 +8,7 @@ export class RemixClient extends PluginClient {
         super();
         this.methods = ["fetch", "verify"];
         connectIframe(this);
+        listenOnThemeChanged(this);
         this.client = this;
     }
 
@@ -136,7 +137,7 @@ export class RemixClient extends PluginClient {
                         let stdUrl = `ipfs://${url.split('/')[2]}`
                         const source = await this.contentImport(stdUrl)
                         file = file.replace('browser/', '')
-                        this.createFile(`/verifiedSources/${address}/${file}`, source.content)
+                        if(source.content) this.createFile(`/verifiedSources/${address}/${file}`, source.content)
                         if (!switched) await this.switchFile(`${address}/${file}`)
                         switched = true
                         break

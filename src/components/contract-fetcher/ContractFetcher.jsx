@@ -31,14 +31,19 @@ export const ContractFetcher = () => {
         setLoading(true);
 
         try {
-            const response = await remixClient.fetch(address, chain.id)
-            await remixClient.saveFetchedToRemix(response.metadata, response.contract, address)
+            const response = await remixClient.fetch(address, chain)
+            console.log("Response:" + JSON.stringify(response));
 
-            if (!!response.metadata) {
+            // TODO: error is returned from saveFetchToRemix
+            // await remixClient.saveFetchedToRemix(response.metadata, response.contract, address)
+
+            if (!!response) {
                 setLoading(false);
                 setChainValue(chain.value);
-                setResult(response);
+                setResult([JSON.stringify(response)]);
+                console.log(result)
             } else {
+                console.log(e)
                 setLoading(false);
                 setError(`Something went wrong!`);
             }
@@ -69,15 +74,7 @@ export const ContractFetcher = () => {
                 }
                 {
                     !!result.length && (
-                        <Alert type={'success'} heading='Contract successfully verified!'>
-                            <p className="m-0 mt-2">
-                                View the assets in the <a href={`${REPOSITORY_URL}contract/${chainValue}/${result[0].address}`}> file explorer.
-                            </a>
-                            </p>
-                            {
-                                result.length > 1 &&
-                                <p>Found {result.length} addresses of this contract: {result.join(', ')}</p>
-                            }
+                        <Alert type={'success'} heading='Contract successfully fetched!'>
                         </Alert>
                     )
                 }

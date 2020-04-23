@@ -94,10 +94,10 @@ export class RemixClient extends PluginClient {
             try {
                 let network = await this.detectNetwork()
                 if(network.id === "-") {
-                    network.id = chain;
+                    network = chain;
                 }
 
-                let response = await axios.get(`${SERVER_URL}/files/${network.id}/${address}`)
+                let response = await axios.get(`${SERVER_URL}/files/${network.name.toLowerCase()}/${address}`)
               
                 if (!response) reject({info: `ŝource of ${address} not found on network ${network.id}`})
                 if (!(response.status === 200)) reject({info: `${response.status}. Network: ${network.name}`}) 
@@ -122,6 +122,7 @@ export class RemixClient extends PluginClient {
     }
 
     saveFetchedToRemix = async (metadata, contract, address) => {
+            try {
             let compilerVersion = metadata.compiler.version;
             let abi = JSON.stringify(metadata.output.abi, null, '\t');
             console.log(address)
@@ -142,6 +143,9 @@ export class RemixClient extends PluginClient {
                     }
                 }
             }
+        } catch(err){
+            console.log(err)
+        }
         
     }
 

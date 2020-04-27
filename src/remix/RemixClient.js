@@ -127,7 +127,7 @@ export class RemixClient extends PluginClient {
             let compilerVersion = metadata.compiler.version;
             let abi = JSON.stringify(metadata.output.abi, null, '\t');
             console.log(address)
-            this.createFile(`/verifiedSources/${address}/metadata.json`, JSON.stringify(metadata, null, '\t'))
+            this.createFile(`/verified-sources/${address}/metadata.json`, JSON.stringify(metadata, null, '\t'))
             let switched = false
             for (let file in metadata['sources']) {
                 console.log(file)
@@ -137,7 +137,7 @@ export class RemixClient extends PluginClient {
                         let stdUrl = `ipfs://${url.split('/')[2]}`
                         const source = await this.contentImport(stdUrl)
                         file = file.replace('browser/', '')
-                        if(source.content) this.createFile(`/verifiedSources/${address}/${file}`, source.content)
+                        if(source.content) this.createFile(`/verified-sources/${address}/${file}`, source.content)
                         if (!switched) await this.switchFile(`${address}/${file}`)
                         switched = true
                         break
